@@ -6,31 +6,35 @@ namespace ServerCore;
 
 class Program
 {
-    static void MainThread(object state)
+    private static bool _stop = false;
+
+    static void ThreadMain()
     {
-        for(var i = 0; i < 5; i++)
+        Console.WriteLine("Thread Start!");
+
+        while (_stop == false)
         {
-            Console.WriteLine("Main Thread");
+            // 누군가의 신호를 줄때까지 대기한다.
         }
-        
+        Console.WriteLine("Thread End!");
     }
+
     
     static void Main(string[] args)
     {
-        ThreadPool.SetMinThreads(1, 1);
-        ThreadPool.SetMaxThreads(5, 5);
+        Task t = new Task(ThreadMain);
+        t.Start();
+        
+        Thread.Sleep(1000);
 
-        for (var i = 0; i < 5; i++)
-        {
-            var task = new Task(() => {
-                while (true)
-                {
-                }
-            }, TaskCreationOptions.LongRunning);
-            task.Start(); 
-        }
+        _stop = true;
 
-        ThreadPool.QueueUserWorkItem(MainThread);
+        Console.WriteLine("Stop 호출");
+        Console.WriteLine("종료 대기중");
+        
+        t.Wait();
+        
+        Console.WriteLine("종료 성공");
     }
 }
 
