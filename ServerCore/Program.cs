@@ -20,19 +20,17 @@ class Program
         ThreadPool.SetMinThreads(1, 1);
         ThreadPool.SetMaxThreads(5, 5);
 
-        for (var i = 0; i < 4; i++)
+        for (var i = 0; i < 5; i++)
         {
-            ThreadPool.QueueUserWorkItem((obj) =>
-            {
+            var task = new Task(() => {
                 while (true)
                 {
                 }
-            });
+            }, TaskCreationOptions.LongRunning);
+            task.Start(); 
         }
-        
+
         ThreadPool.QueueUserWorkItem(MainThread);
-        
-        while(true) {}
     }
 }
 
