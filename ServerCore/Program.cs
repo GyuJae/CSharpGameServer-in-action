@@ -6,12 +6,12 @@ namespace ServerCore;
 
 class Program
 {
-    private static bool _stop = false;
+    private static volatile bool _stop = false;
 
     static void ThreadMain()
     {
         Console.WriteLine("Thread Start!");
-
+        
         while (_stop == false)
         {
             // 누군가의 신호를 줄때까지 대기한다.
