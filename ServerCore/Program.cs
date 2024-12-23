@@ -10,12 +10,18 @@ class Program
 
     static void Thread1()
     {
-        for (int i = 0; i < 100000; i++) num++;
+        for (int i = 0; i < 100000; i++)
+        {
+            Interlocked.Increment(ref num); 
+        }
     }
 
     static void Thread2()
     {
-        for (int i = 0; i < 100000; i++) num--;
+        for (int i = 0; i < 100000; i++)
+        {
+            Interlocked.Decrement(ref num);
+        }
     }
     
     static void Main(string[] args)
