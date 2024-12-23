@@ -6,40 +6,29 @@ namespace ServerCore;
 
 class Program
 {
-    private static int _num = 0;
-    private static Mutex _lock = new Mutex();
+    private static ThreadLocal<string> ThreadName = new ThreadLocal<string>(() => $"My Name Is {Thread.CurrentThread.ManagedThreadId}");
 
-    static void Thread1()
+    static void WhoAmi()
     {
-        for (int i = 0; i < 10000; i++)
+        bool repeat = ThreadName.IsValueCreated;
+        if (repeat)
         {
-            _lock.WaitOne();
-            _num++;
-            _lock.ReleaseMutex(); 
+            Console.WriteLine(ThreadName.Value + "  (repeat)");
         }
-    }
-
-    static void Thread2()
-    {
-        for (int i = 0; i < 10000; i++)
+        else
         {
-            _lock.WaitOne();
-            _num--;
-            _lock.ReleaseMutex(); 
+            Console.WriteLine(ThreadName.Value);
         }
+        
+        Thread.Sleep(1000);
+        Console.WriteLine(ThreadName.Value);
     }
     
     static void Main(string[] args)
     {
-        var t1 = new Task(Thread1);
-        var t2 = new Task(Thread2);
+        ThreadPool.SetMinThreads(1, 1);
+        ThreadPool.SetMaxThreads(3, 3);
         
-        t1.Start();
-        t2.Start();
-        
-        Task.WaitAll(t1, t2);
-        
-        Console.WriteLine(_num);
+        Parallel.Invoke(WhoAmi, WhoAmi ,WhoAmi ,WhoAmi ,WhoAmi ,WhoAmi ,WhoAmi ,WhoAmi, WhoAmi , WhoAmi);
     }
 }
-
