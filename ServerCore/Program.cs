@@ -6,19 +6,57 @@ namespace ServerCore;
 
 class Program
 {
+
+    class SessionManager
+    {
+        static object _lock = new object();
+
+        public static void Test()
+        {
+            lock (_lock)
+            {
+               UserManager.TestUser(); 
+            }
+        }
+
+       public static void TestSession()
+        {
+            lock (_lock)
+            {
+                
+            }
+        }
+    }
+
+    class UserManager
+    {
+        static object _lock = new object();
+
+        public static void TestUser()
+        {
+            lock (_lock)
+            {
+                
+            }
+        }
+
+        public static void Test()
+        {
+            lock (_lock)
+            {
+                SessionManager.TestSession();
+            }
+        }
+        
+    }
+    
     private static int num = 0;
-    private static object _obj = new object();
     
     static void Thread1()
     {
         for (int i = 0; i < 100000; i++)
         {
-            lock (_obj)
-            {
-                num++;    
-            }
-            
-            
+            UserManager.Test();
         }
     }
 
@@ -26,11 +64,8 @@ class Program
     {
         for (int i = 0; i < 100000; i++)
         {
-            lock (_obj)
-            {
-                num--;
-            }
-        } 
+            SessionManager.Test();
+        }
     }
     
     static void Main(string[] args)
@@ -43,7 +78,7 @@ class Program
         
         Task.WaitAll(t1, t2);
         
-        Console.WriteLine(num);
+        Console.WriteLine(1);
     }
 }
 
