@@ -13,10 +13,12 @@ class Program
     {
         for (int i = 0; i < 100000; i++)
         {
-            // 상호배제 Mutual Exclusive
-            Monitor.Enter(_obj);
-            num++;
-            Monitor.Exit(_obj);
+            lock (_obj)
+            {
+                num++;    
+            }
+            
+            
         }
     }
 
@@ -24,9 +26,10 @@ class Program
     {
         for (int i = 0; i < 100000; i++)
         {
-            Monitor.Enter(_obj);
-            num--;
-            Monitor.Exit(_obj);
+            lock (_obj)
+            {
+                num--;
+            }
         } 
     }
     
