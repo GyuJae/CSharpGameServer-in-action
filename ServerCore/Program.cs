@@ -7,12 +7,16 @@ namespace ServerCore;
 class Program
 {
     private static int num = 0;
-
+    private static object _obj = new object();
+    
     static void Thread1()
     {
         for (int i = 0; i < 100000; i++)
         {
-            Interlocked.Increment(ref num); 
+            // 상호배제 Mutual Exclusive
+            Monitor.Enter(_obj);
+            num++;
+            Monitor.Exit(_obj);
         }
     }
 
@@ -20,8 +24,10 @@ class Program
     {
         for (int i = 0; i < 100000; i++)
         {
-            Interlocked.Decrement(ref num);
-        }
+            Monitor.Enter(_obj);
+            num--;
+            Monitor.Exit(_obj);
+        } 
     }
     
     static void Main(string[] args)
