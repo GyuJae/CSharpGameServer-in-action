@@ -13,32 +13,38 @@ class Program
         IPEndPoint localEndPoint = new IPEndPoint(ipAddr, 7777);
         
         // Socket 설정
-        Socket socket = new Socket(localEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-        
-        try
+
+        while (true)
         {
-            socket.Connect(localEndPoint);
-            Console.WriteLine("Socket connected to {0}:{1}", localEndPoint.Address, socket.RemoteEndPoint?.ToString());
+            try
+            {
+                Socket socket = new Socket(localEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+
+                socket.Connect(localEndPoint);
+                Console.WriteLine("Socket connected to {0}:{1}", localEndPoint.Address, socket.RemoteEndPoint?.ToString());
 
 
-            // Send
-            byte[] sendBuffer = Encoding.UTF8.GetBytes("Hello World");
-            int sendBytes = socket.Send(sendBuffer);
+                // Send
+                byte[] sendBuffer = Encoding.UTF8.GetBytes("Hello World");
+                int sendBytes = socket.Send(sendBuffer);
 
-            // Receive
-            byte[] receiveBuffer = new byte[1024];
-            int receiveBytes = socket.Receive(receiveBuffer);
-            string message = Encoding.UTF8.GetString(receiveBuffer, 0, receiveBytes);
-            Console.WriteLine($"[Server]: {message}");
+                // Receive
+                byte[] receiveBuffer = new byte[1024];
+                int receiveBytes = socket.Receive(receiveBuffer);
+                string message = Encoding.UTF8.GetString(receiveBuffer, 0, receiveBytes);
+                Console.WriteLine($"[Server]: {message}");
 
-            // 나간다
-            socket.Shutdown(SocketShutdown.Both);
-            socket.Close();
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
+                // 나간다
+                socket.Shutdown(SocketShutdown.Both);
+                socket.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
+            Thread.Sleep(2000);
         }
     }
 }
